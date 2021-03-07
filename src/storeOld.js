@@ -1,14 +1,9 @@
-import { Provider } from 'react-redux';
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/firestore';
 import { createStore, combineReducers, compose } from 'redux';
-import { ReactReduxFirebaseProvider, firebaseReducer } from 'react-redux-firebase';
-import { createFirestoreInstance, firestoreReducer } from 'redux-firestore';
-// import { reactReduxFirebase, firebaseReducer } from 'react-redux-firebase'; //Duplicate
-// import { reduxFirestore, firestoreReducer } from 'redux-firestore'; //Not in docs
-
-// Reducers
+import firebase from 'firebase';
+import 'firebase/firestore';
+import { reactReduxFirebase, firebaseReducer } from 'react-redux-firebase';
+import { reduxFirestore, firestoreReducer } from 'redux-firestore';
+// Recucers
 // @todo
 
 const firebaseConfig = {
@@ -47,21 +42,14 @@ const rootReducer = combineReducers({
 // Create initial state
 const initialState = {};
 
-// Create store with reducers - DEVTOOLS TUTORIAL: https://redux.js.org/recipes/configuring-your-store/#integrating-the-devtools-extension
+// Create store with reducers
 const store = createStore(
   rootReducer, 
-  initialState
-  // compose(
-  //   reactReduxFirebase(firestore),
-  //   window.__REDUX_DEVTOOLS_EXTENSION__ && Window.__REDUX_DEVTOOLS_EXTENSION__()
-  // )
+  initialState, 
+  compose(
+    reactReduxFirebase(firestore),
+    window.__REDUX_DEVTOOLS_EXTENSION__ && Window.__REDUX_DEVTOOLS_EXTENSION__()
+  )
 );
 
-export const rrfProps = {
-  firebase,
-  config: rrfConfig,
-  dispatch: store.dispatch,
-  createFirestoreInstance
-}
-
-export default store; 
+export default store;
