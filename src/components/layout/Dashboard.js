@@ -2,7 +2,7 @@ import React from 'react';
 import Clients from '../clients/Clients';
 import Sidebar from './Sidebar';
 
-export default function Dashboard() {
+function Dashboard() {
   return (
     <div className="row">
       <div className="col-md-10">
@@ -14,3 +14,5 @@ export default function Dashboard() {
     </div>
   )
 }
+
+export default Dashboard;
