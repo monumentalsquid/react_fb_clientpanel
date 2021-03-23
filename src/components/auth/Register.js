@@ -6,11 +6,19 @@ import { firebaseConnect} from 'react-redux-firebase';
 import { notifyUser } from '../../actions/notifyActions';
 import Alert from '../layout/Alert';
 
-class Login extends Component {
+class Register extends Component {
 
   state = {
     email: '',
     password: ''
+  }
+
+  componentWillMount() {
+    const { allowRegistration } = this.props.settings;
+
+    if (!allowRegistration) {
+      this.props.history.push('/');
+    }
   }
 
   onSubmit = e => {
@@ -19,10 +27,9 @@ class Login extends Component {
     const { firebase, notifyUser } = this.props;
     const { email, password } = this.state;
 
-    firebase.login({
-      email,
-      password
-    }).catch(err => notifyUser('Invalid Login Credentials', 'error'));
+    //register with firebase
+    firebase.createUser({ email, password })
+    .catch(err => notifyUser('That User Already Exists', 'error'))
   }
 
   onChange = e => {
@@ -46,7 +53,7 @@ class Login extends Component {
               ) : null}
               <h1 className="text-center pb-4 pt-3">
                 <span className="text-primary">
-                  <i className="fas fa-lock" />{' '}Login
+                  <i className="fas fa-lock" />{' '}Register
                 </span>
               </h1>
               <form onSubmit={this.onSubmit}>
@@ -72,7 +79,7 @@ class Login extends Component {
                     onChange={this.onChange}
                   />
                 </div>
-                <input type="submit" value="Login" className="btn btn-primary col-12 mt-3"/>
+                <input type="submit" value="Register" className="btn btn-primary col-12 mt-3"/>
               </form>
             </div>
           </div>
@@ -82,7 +89,7 @@ class Login extends Component {
   }
 }
 
-Login.propTypes = {
+Register.propTypes = {
   firebase: PropTypes.object.isRequired,
   notify: PropTypes.object.isRequired,
   notifyUser: PropTypes.func.isRequired
@@ -92,6 +99,7 @@ Login.propTypes = {
 export default compose(
   firebaseConnect(),
   connect((state, props) => ({
-    notify: state.notify
+    notify: state.notify,
+    settings: state.settings
   }), { notifyUser })
-)(Login);
+)(Register);
